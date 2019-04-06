@@ -12,24 +12,34 @@ describe UsersController do
     end
 
     it 'render json with all users' do
-      User.create(name: 'Angie',  description: 'Aprendiendo a codear')
-      User.create(name: 'Carlos', description: 'Firebase Rules!!')
-      User.create(name: 'Cesar',  description: 'BBRRRRR')
+      User.create(
+        name: 'Angie',
+        description: 'Aprendiendo a codear'
+      )
+      User.create(
+        name: 'Carlos',
+        description: 'Firebase Rules!!'
+      )
       get :index
       users = JSON.parse(response.body)
-      expect(users.size).to eq 3
+      expect(users.size).to eq 2
     end
   end
 
   describe 'GET show' do
     it 'returns http status ok' do
-      user = User.create(name: "Deyvi", description: 'Mi pelucaaaaa')
+      user = User.create(
+              name: "Deyvi",
+              description: 'Mi pelucaaaaa'
+            )
       get :show, params: { id: user.id }
       expect(response).to have_http_status(:ok)
     end
 
     it 'render the correct user' do
-      user = User.create(name: "Deyvi", description: 'Mi segunda prueba')
+      user = User.create(name: "Deyvi",
+              description: 'Mi segunda prueba'
+            )
       get :show, params: { id: user.id }
       expected_user = JSON.parse(response.body)
       expect(expected_user["id"]).to eq(user.id)
