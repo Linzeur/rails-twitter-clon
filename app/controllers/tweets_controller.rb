@@ -14,14 +14,14 @@ class TweetsController < ApplicationController
   end
 
   def update
-    product = Product.find(params[:id])
-    params.keys.each do |key|
-      if key != :id && product.attributes.keys?(key)
-        product[key] = params[key]
-      end
-    end
-    product.save
-    render json: product
+    tweet = Tweet.find(params[:id])
+    # params.keys.each do |key|
+    #   if key != :content && tweet.attributes.keys?(key)
+    #     tweet[key] = params[key]
+    #   end
+    # end
+    # tweet.save
+    render json: tweet
   end
 
   rescue_from ActiveRecord::RecordNotFound do |e|

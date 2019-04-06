@@ -76,21 +76,24 @@ describe TweetsController do
     end
   end  
 
-end
 
-describe "PATCH update" do
-  it "returns http status ok" do
-    created_user = User.create(name: "Carlos", description: 'Software developer!')
-    tweets = Tweet.create(content: "Estoy testeando update!", user: created_user)
-    patch :update, params: { user: created_user, id: tweets.id }
-    expect(response).to have_http_status(:ok)
+  describe "PATCH update" do
+    it "returns http status ok" do
+      created_user = User.create(name: "Carlos", description: 'Software developer!')
+      tweets = Tweet.create(content: "Estoy testeando update!", user: created_user)
+      patch :update, params: { user: created_user, id: tweets.id }
+      expect(response).to have_http_status(:ok)
+    end
+
+
+    it "returns the updated product" do
+      created_user = User.create(name: "Carlos", description: 'Software developer!')
+      tweets = Tweet.create(content: "Estoy testeando update!", user: created_user)
+      patch :update, params: { user: created_user, content: "Updated!" }
+      expected_tweet = JSON.parse(response.body)
+      p expected_tweet
+      expect(expected_tweet["content"]).to eq("Updated!")
+      # expect(expected_tweet["category"]).to eq("Hola")
+    end
   end
-
-#   it "returns the updated product" do
-#     product = Product.create(name: 'Apple')
-#     patch :update, params: { name: "Orange", id: product.id, category: "Hola" }
-#     expected_product = JSON.parse(response.body)
-#     expect(expected_product["name"]).to eq("Orange")
-#     expect(expected_product["category"]).to eq("Hola")
-#   end
-# end
+end
