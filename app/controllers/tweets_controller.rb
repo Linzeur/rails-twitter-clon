@@ -8,6 +8,23 @@ class TweetsController < ApplicationController
     render json: Tweet.find(params[:id])
   end
 
+  def create
+    tweet = Tweet.create(content: params[:content])
+    render json: tweet, status: :created
+  end
+
+  def update
+    tweet = Tweet.find(params[:id])
+        params.keys.each do |key|
+      if key != :id && key != :user_id && tweet.attributes.key?(key)
+        tweet[key] = params[key]
+      end
+    end
+    tweet.save
+    render json: tweet
+  end
+  
+
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found
   end
