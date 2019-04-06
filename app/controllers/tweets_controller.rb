@@ -13,16 +13,16 @@ class TweetsController < ApplicationController
     render json: tweet, status: :created
   end
 
-  # def update
-  #   product = Product.find(params[:id])
-  #   params.keys.each do |key|
-  #     if key != :id && product.attributes.keys?(key)
-  #       product[key] = params[key]
-  #     end
-  #   end
-  #   product.save
-  #   render json: product
-  # end
+  def update
+    product = Product.find(params[:id])
+    params.keys.each do |key|
+      if key != :id && product.attributes.keys?(key)
+        product[key] = params[key]
+      end
+    end
+    product.save
+    render json: product
+  end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found

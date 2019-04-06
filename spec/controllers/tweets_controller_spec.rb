@@ -78,27 +78,13 @@ describe TweetsController do
 
 end
 
-# describe "POST create" do
-#   it "returns http status created" do
-#     post :create, params: { name: "Pear" }
-#     expect(response.status).to eq(201)
-#     expect(response).to have_http_status(:created)
-#   end
-
-#   it "returns the created product" do
-#     post :create, params: { name: "Banana" }
-#     expected_product = JSON.parse(response.body)
-#     expect(expected_product).to have_key("id")
-#     expect(expected_product["name"]).to eq("Banana")
-#   end
-# end
-
-# describe "PATCH update" do
-#   it "returns http status ok" do
-#     product = Product.create(name: 'Apple')
-#     patch :update, params: { name: "Orange", id: product.id, category: "Hola" }
-#     expect(response).to have_http_status(:ok)
-#   end
+describe "PATCH update" do
+  it "returns http status ok" do
+    created_user = User.create(name: "Carlos", description: 'Software developer!')
+    tweets = Tweet.create(content: "Estoy testeando update!", user: created_user)
+    patch :update, params: { user: created_user, id: tweets.id }
+    expect(response).to have_http_status(:ok)
+  end
 
 #   it "returns the updated product" do
 #     product = Product.create(name: 'Apple')
