@@ -15,14 +15,15 @@ class TweetsController < ApplicationController
 
   def update
     tweet = Tweet.find(params[:id])
-    # params.keys.each do |key|
-    #   if key != :content && tweet.attributes.keys?(key)
-    #     tweet[key] = params[key]
-    #   end
-    # end
-    # tweet.save
+        params.keys.each do |key|
+      if key != :id && key != :user_id && tweet.attributes.key?(key)
+        tweet[key] = params[key]
+      end
+    end
+    tweet.save
     render json: tweet
   end
+  
 
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found
