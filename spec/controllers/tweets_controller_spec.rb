@@ -14,16 +14,18 @@ describe TweetsController do
     it 'render json with all tweets' do
 
       usuario = User.create(
-                  name: 'Angie',  
+                  name: 'Angie',
+                  username: 'AngieC',
                   description: 'Aprendiendo a codear'
-                  )
+                )
       tweet = Tweet.create(
-                  content: 'Testeando tweets!', 
-                  user: usuario
-                  )
+                content: 'Testeando tweets!', 
+                user: usuario
+              )
       get :index
       tweets = JSON.parse(response.body)
       expect(tweets.size).to eq(1)
+      expect(tweets.first).to have_key("counts")
     end
   end
 
@@ -32,27 +34,29 @@ describe TweetsController do
   describe 'GET show' do
     it 'returns http status ok' do
       created_user = User.create(
-                      name: "Deyvi", 
+                      name: "Deyvi",
+                      username: 'deyconde',
                       description: 'Mi pelucaaaaa'
-                      )
+                    )
       tweets = Tweet.create(
                 content: 'Estoy testeando show!',
                 user: created_user
-                )
-            get :show, params: { id: tweets.id }
+              )
+      get :show, params: { id: tweets.id }
       expect(response).to have_http_status(:ok)
     end
 
 
     it 'render the correct tweet' do
       created_user = User.create(
-                      name: "Deyvi", 
+                      name: "Deyvi",
+                      username: 'deyconde',
                       description: 'Mi pelucaaaaa'
-                      )
+                    )
       tweets = Tweet.create(
                 content: "Estoy mostrando el correcto tweet", 
                 user: created_user
-                )
+              )
       get :show, params: { id: tweets.id }
       expected_tweet = JSON.parse(response.body)
       expect(expected_tweet["id"]).to eq(tweets.id)
@@ -68,19 +72,26 @@ describe TweetsController do
   describe "POST create" do
     it "returns http status created" do
       created_user = User.create(
-        name: "Brayan", 
-        description: 'Mis tests!'
-        )
+                      name: "Brayan",
+                      username: 'linzeur',
+                      description: 'Mis tests!'
+                    )
       post :create, params: { content: "Este tweet ha sido creado!", user: created_user}
       expect(response.status).to eq(201)
       expect(response).to have_http_status(:created)
     end
 
     it "returns the created tweet" do
-      post :create, params: { content: "Este tweet se debe mostrar" }
+      created_user = User.create(
+                      name: "Brayan",
+                      username: 'linzeur',
+                      description: 'Mis tests!'
+                    )
+      post :create, params: { content: "Este tweet se debe mostrar", user_id: created_user.id }
       expected_tweet = JSON.parse(response.body)
       expect(expected_tweet).to have_key("id")
       expect(expected_tweet["content"]).to eq("Este tweet se debe mostrar")
+      expect(expected_tweet["user_id"]).to eq(created_user.id)
     end
   end  
 
@@ -88,29 +99,26 @@ describe TweetsController do
   describe "PATCH update" do
     it "returns http status ok" do
       created_user = User.create(
-                      name: "Carlos", 
+                      name: "Carlos",
+                      username: 'calitosS',
                       description: 'Software developer!'
-                      )
-      tweets = Tweet.create(
-                content: "Estoy testeando update!", 
-                user_id: created_user.id
-                )
+                    )
+      tweets = Tweet.create(content: "Estoy testeando update!", user_id: created_user.id)
       patch :update, params: { id: tweets.id}
       expect(response).to have_http_status(:ok)
     end
 
-    it "returns the updated product" do
+    it "returns the updated tweet" do
       created_user = User.create(
-                      name: "Carlos", 
+                      name: "Carlos",
+                      username: 'calitosS',
                       description: 'Software developer!'
-                      )
-      tweets = Tweet.create(
-                content: "Estoy testeando update!", 
-                user_id: created_user.id
-                )
+                    )
+      tweets = Tweet.create(content: "Estoy testeando update!", user_id: created_user.id)
       patch :update, params: {  id: tweets.id, content: "Updated!" }
       expected_tweet = JSON.parse(response.body)
       expect(expected_tweet["content"]).to eq("Updated!")
+      expect(expected_tweet).to have_key("counts")
     end
   end
 
@@ -118,20 +126,22 @@ describe TweetsController do
   describe "DELETE destroy" do
     it "returns http status no content" do
       created_user = User.create(
-                      name: "Cesar", 
+                      name: "Cesar",
+                      username: 'cesitar89',
                       description: 'Ruby developer!'
-                      )
+                    )
       tweets = Tweet.create(
                 content: 'Testing DELETE method!', 
                 user_id: created_user.id
-                )
+              )
       delete :destroy, params: { id: tweets.id }
       expect(response).to have_http_status(:no_content)
     end
 
     it "returns empty body" do
       created_user = User.create(
-                      name: "Angie", 
+                      name: "Angie",
+                      username: 'ang145',
                       description: 'Developing my twitter API!'
                       )
       tweets = Tweet.create(
@@ -144,7 +154,8 @@ describe TweetsController do
 
     it "actually delete the Tweet" do
       created_user = User.create(
-                      name: "Sergio", 
+                      name: "Sergio",
+                      username: 'sergiox25',
                       description: 'Full Stack Software Developer!'
                       )
       created_tweet = Tweet.create(

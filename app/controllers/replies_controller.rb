@@ -1,6 +1,6 @@
 class RepliesController < ApplicationController
   def index
-    render json: Tweet.where.not("tweet_id"=> nil)
+    render json: Tweet.where.not(tweet_id: nil)
   end
 
   def show
