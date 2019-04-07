@@ -113,4 +113,47 @@ describe TweetsController do
       expect(expected_tweet["content"]).to eq("Updated!")
     end
   end
+
+
+  describe "DELETE destroy" do
+    it "returns http status no content" do
+      created_user = User.create(
+                      name: "Cesar", 
+                      description: 'Ruby developer!'
+                      )
+      tweets = Tweet.create(
+                content: 'Testing DELETE method!', 
+                user_id: created_user.id
+                )
+      delete :destroy, params: { id: tweets.id }
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it "returns empty body" do
+      created_user = User.create(
+                      name: "Angie", 
+                      description: 'Developing my twitter API!'
+                      )
+      tweets = Tweet.create(
+                content: 'Testeando el método destroy', 
+                user_id: created_user.id
+                )
+      delete :destroy, params: { id: tweets.id }
+      expect(response.body).to eq(" ")
+    end
+
+    it "actually delete the Tweet" do
+      created_user = User.create(
+                      name: "Sergio", 
+                      description: 'Full Stack Software Developer!'
+                      )
+      created_tweet = Tweet.create(
+                      content: "Esto será destruido", 
+                      user_id: created_user.id
+                      )
+      tweets = Tweet.where(user_id: created_user.id)
+      delete :destroy, params: { id: created_tweet.id }
+      expect(tweets.size).to eq(0)
+    end
+  end
 end
