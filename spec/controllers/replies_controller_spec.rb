@@ -5,6 +5,92 @@ describe RepliesController do
     Tweet.delete_all
   end
 
+  describe "GET index" do
+    it "returns http status ok" do
+     get :index
+     expect(response).to have_http_status(:ok)
+    end
+
+    it 'render json with all replies' do
+      created_user = User.create(
+        name: "Carlos", 
+        description: 'Software developer!'
+      )
+      tweets = Tweet.create(content: 'Un tweet', user_id:created_user.id)
+      tweet_replies = Tweet.create(
+        tweet_id: tweets.id,
+        content: "Respondiendo a mi tweet",
+        user_id: created_user.id
+      )
+      get :index
+      tweet = JSON.parse(response.body)
+      expect(tweet.size).to eq 1
+    end
+  end
+
+
+  describe 'GET show' do
+    it 'returns http status ok' do
+      created_user = User.create(
+        name: "Carlos", 
+        description: 'Software developer!'
+      )
+      tweets = Tweet.create(content: 'Primer tweet', user_id:created_user.id)
+      tweet_replies = Tweet.create(
+        tweet_id: tweets.id,
+        content: "Respondiendo a mi tweet",
+        user_id: created_user.id
+      )
+      get :show, params: { id: tweet_replies }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'render the correct tweet' do
+      created_user = User.create(
+        name: "Carlos", 
+        description: 'Software developer!'
+      )
+      tweets = Tweet.create(content: 'Primer tweet', user_id:created_user.id)
+      tweet_replies = Tweet.create(
+        tweet_id: tweets.id,
+        content: "Respondiendo a mi tweet",
+        user_id: created_user.id
+      )
+      get :show, params: { id: tweet_replies}
+      expected_tweet = JSON.parse(response.body)
+      expect(expected_tweet["id"]).to eq(tweet_replies.id)
+    end
+    it 'returns http status not found' do
+      get :show, params: { id: 'xxx' }
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+
+  describe "POST create" do
+    it "returns http status created" do
+      created_user = User.create(
+        name: "Carlos", 
+        description: 'Software developer!'
+      )
+      post :create, params: { content: "Primer Tweet",user_id: created_user.id }
+      expect(response.status).to eq(201)
+      expect(response).to have_http_status(:created)
+    end
+
+    it "returns the created product" do
+      created_user = User.create(
+        name: "Carlos", 
+        description: 'Software developer!'
+      )
+      post :create, params: { content: "Primer Tweet", user_id: created_user.id }
+      expected_product = JSON.parse(response.body)
+      expect(expected_product).to have_key("id")
+      expect(expected_product["content"]).to eq("Primer Tweet")
+    end
+  end
+
+
   describe "PATCH update" do
     it "returns http status ok" do
       created_user = User.create(
@@ -60,7 +146,7 @@ describe RepliesController do
                 )
       tweet_replies = Tweet.create(
         tweet_id: tweets.id,
-        content: "Respondiendo a un tweet",s
+        content: "Respondiendo a un tweet",
         user_id: created_user.id
       )      
       delete :destroy, params: { id: tweet_replies.id }

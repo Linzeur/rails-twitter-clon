@@ -1,5 +1,11 @@
 class RepliesController < ApplicationController
- 
+  def index
+    render json: Tweet.where.not("tweet_id"=> nil)
+  end
+
+  def show
+    render json: Tweet.find(params[:id])
+  end
 
   def update
     tweet = Tweet.find(params[:id])
@@ -10,6 +16,11 @@ class RepliesController < ApplicationController
     end
     tweet.save
     render json: tweet
+  end
+
+  def create
+    tweet = Tweet.create(content: params[:content])
+    render json: tweet, status: :created
   end
 
   def destroy
