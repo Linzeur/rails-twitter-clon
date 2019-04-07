@@ -1,4 +1,9 @@
 class FollowsController < ApplicationController
+  def index
+    follows = Follow.select("id, follower_id, followed_id").where(follower_id: params[:user_id])
+    render json: follows
+  end
+
   def create
     follow = Follow.create(follower_id: params[:user_id], followed_id: params[:followed_id])
     render json: follow, status: :created

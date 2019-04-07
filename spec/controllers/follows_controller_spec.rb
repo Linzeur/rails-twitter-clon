@@ -5,6 +5,41 @@ describe FollowsController do
     Follow.delete_all
   end
 
+  describe 'GET index' do
+    it 'returns http status ok' do
+      first_user = User.create(
+                    name: 'Angie',
+                    username: 'AngieC',
+                    description: 'Aprendiendo a codear'
+                  )
+      second_user = User.create(
+                      name: 'Carlos',
+                      username: 'CarlitosS',
+                      description: 'Firebase Rules!!'
+                    )
+      follow = Follow.create(follower_id: first_user.id, followed_id: second_user.id)
+      get :index, params: { user_id: first_user.id}
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'render json with all follows' do
+      first_user = User.create(
+                    name: 'Angie',
+                    username: 'AngieC',
+                    description: 'Aprendiendo a codear'
+                  )
+      second_user = User.create(
+                      name: 'Carlos',
+                      username: 'CarlitosS',
+                      description: 'Firebase Rules!!'
+                    )
+      follow = Follow.create(follower_id: first_user.id, followed_id: second_user.id)
+      get :index, params: { user_id: first_user.id}
+      follows = JSON.parse(response.body)
+      expect(follows.size).to eq 1
+    end
+  end
+
   describe "POST create" do
     it "returns http status created" do
       first_user = User.create(

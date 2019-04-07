@@ -42,7 +42,7 @@ describe TweetsController do
                 content: 'Estoy testeando show!',
                 user: created_user
               )
-            get :show, params: { id: tweets.id }
+      get :show, params: { id: tweets.id }
       expect(response).to have_http_status(:ok)
     end
 

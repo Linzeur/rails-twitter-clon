@@ -13,7 +13,12 @@ class TweetsController < ApplicationController
   end
 
   def show
-    render json: Tweet.find(params[:id])
+    tweet_founded = Tweet.find(params[:id])
+    new_hash = Hash.new
+    new_hash[:replies] = tweet_founded.tweets.size
+    new_hash[:likes] = tweet_founded.likes.size
+    tweet_founded.counts = new_hash
+    render json: tweet_founded, methods: [:counts]
   end
 
   def create
