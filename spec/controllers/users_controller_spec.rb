@@ -25,6 +25,7 @@ describe UsersController do
       get :index
       users = JSON.parse(response.body)
       expect(users.size).to eq 2
+      expect(users.first).to have_key("counts")
     end
   end
 
@@ -68,6 +69,8 @@ describe UsersController do
       expected_user = JSON.parse(response.body)
       expect(expected_user).to have_key("id")
       expect(expected_user["name"]).to eq("Usuario 1")
+      expect(expected_user["username"]).to eq("userTest")
+      expect(expected_user["country"]).to eq("Peru")
     end
   end
 
@@ -94,6 +97,7 @@ describe UsersController do
       expected_user = JSON.parse(response.body)
       expect(expected_user["name"]).to eq("Usuario 1 updated")
       expect(expected_user["username"]).to eq("userTest1")
+      expect(expected_user).to have_key("counts")
     end
   end
 

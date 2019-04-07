@@ -25,6 +25,7 @@ describe TweetsController do
       get :index
       tweets = JSON.parse(response.body)
       expect(tweets.size).to eq(1)
+      expect(tweets.first).to have_key("counts")
     end
   end
 
@@ -81,10 +82,16 @@ describe TweetsController do
     end
 
     it "returns the created tweet" do
-      post :create, params: { content: "Este tweet se debe mostrar" }
+      created_user = User.create(
+                      name: "Brayan",
+                      username: 'linzeur',
+                      description: 'Mis tests!'
+                    )
+      post :create, params: { content: "Este tweet se debe mostrar", user_id: created_user.id }
       expected_tweet = JSON.parse(response.body)
       expect(expected_tweet).to have_key("id")
       expect(expected_tweet["content"]).to eq("Este tweet se debe mostrar")
+      expect(expected_tweet["user_id"]).to eq(created_user.id)
     end
   end  
 
@@ -101,7 +108,7 @@ describe TweetsController do
       expect(response).to have_http_status(:ok)
     end
 
-    it "returns the updated product" do
+    it "returns the updated tweet" do
       created_user = User.create(
                       name: "Carlos",
                       username: 'calitosS',
@@ -111,6 +118,7 @@ describe TweetsController do
       patch :update, params: {  id: tweets.id, content: "Updated!" }
       expected_tweet = JSON.parse(response.body)
       expect(expected_tweet["content"]).to eq("Updated!")
+      expect(expected_tweet).to have_key("counts")
     end
   end
 
@@ -118,20 +126,22 @@ describe TweetsController do
   describe "DELETE destroy" do
     it "returns http status no content" do
       created_user = User.create(
-                      name: "Cesar", 
+                      name: "Cesar",
+                      username: 'cesitar89',
                       description: 'Ruby developer!'
-                      )
+                    )
       tweets = Tweet.create(
                 content: 'Testing DELETE method!', 
                 user_id: created_user.id
-                )
+              )
       delete :destroy, params: { id: tweets.id }
       expect(response).to have_http_status(:no_content)
     end
 
     it "returns empty body" do
       created_user = User.create(
-                      name: "Angie", 
+                      name: "Angie",
+                      username: 'ang145',
                       description: 'Developing my twitter API!'
                       )
       tweets = Tweet.create(
@@ -144,7 +154,8 @@ describe TweetsController do
 
     it "actually delete the Tweet" do
       created_user = User.create(
-                      name: "Sergio", 
+                      name: "Sergio",
+                      username: 'sergiox25',
                       description: 'Full Stack Software Developer!'
                       )
       created_tweet = Tweet.create(

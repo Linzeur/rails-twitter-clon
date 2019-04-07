@@ -7,7 +7,7 @@ class UsersController < ApplicationController
               row.counts = Hash.new
               row.counts = new_hash
               row
-            end    
+            end
     render json: users, methods: [:counts]
   end
 
@@ -37,7 +37,7 @@ class UsersController < ApplicationController
     new_hash[:followers] = user_founded.followers.size
     new_hash[:follows] = user_founded.follows.size
     user_founded.counts = new_hash
-    render json: user_founded
+    render json: user_founded, methods: [:counts]
   end
 
   def destroy
