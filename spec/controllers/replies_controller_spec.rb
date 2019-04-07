@@ -13,7 +13,8 @@ describe RepliesController do
 
     it 'render json with all replies' do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(content: 'Un tweet', user_id:created_user.id)
@@ -24,7 +25,7 @@ describe RepliesController do
       )
       get :index
       tweet = JSON.parse(response.body)
-      expect(tweet.size).to eq 1
+      expect(Tweet.where.not(tweet_id: nil).size).to eq 1
     end
   end
 
@@ -32,7 +33,8 @@ describe RepliesController do
   describe 'GET show' do
     it 'returns http status ok' do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(content: 'Primer tweet', user_id:created_user.id)
@@ -47,7 +49,8 @@ describe RepliesController do
 
     it 'render the correct tweet' do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(content: 'Primer tweet', user_id:created_user.id)
@@ -70,7 +73,8 @@ describe RepliesController do
   describe "POST create" do
     it "returns http status created" do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(
@@ -84,7 +88,8 @@ describe RepliesController do
 
     it "returns the created product" do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(
@@ -102,7 +107,8 @@ describe RepliesController do
   describe "PATCH update" do
     it "returns http status ok" do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       tweets = Tweet.create(
@@ -118,13 +124,15 @@ describe RepliesController do
       expect(response).to have_http_status(:ok)
     end
 
-    it "returns the updated product" do
+    it "returns the updated reply" do
       created_user = User.create(
-        name: "Carlos", 
+        name: "Carlos",
+        username: "Prueba",
         description: 'Software developer!'
       )
       new_user = User.create(
-        name: "Cesar", 
+        name: "Cesar",
+        username: "Prueba",
         description: 'Full Stack Software developer!'
       )
       tweets = Tweet.create(
@@ -137,15 +145,16 @@ describe RepliesController do
         user_id: new_user.id
       )
       patch :update, params: { content: "Estoy testeando replies", id: tweet_replies.id }
-      expected_product = JSON.parse(response.body)
-      expect(expected_product["content"]).to eq("Estoy testeando replies")     
+      expected_reply= JSON.parse(response.body)
+      expect(expected_reply["content"]).to eq("Estoy testeando replies")     
     end
   end
 
   describe "DELETE destroy" do
     it "returns http status no content" do
       created_user = User.create(
-                      name: "Cesar", 
+                      name: "Cesar",
+                      username: "Prueba",
                       description: 'Ruby developer!'
                       )
       tweets = Tweet.create(
@@ -163,7 +172,8 @@ describe RepliesController do
 
     it "returns empty body" do
       created_user = User.create(
-                      name: "Angie", 
+                      name: "Angie",
+                      username: "Prueba",
                       description: 'Developing my twitter API!'
                       )
       tweets = Tweet.create(
@@ -181,7 +191,8 @@ describe RepliesController do
 
     it "actually delete the reply" do
       created_user = User.create(
-                      name: "Sergio", 
+                      name: "Sergio",
+                      username: "Prueba",
                       description: 'Full Stack Software Developer!'
                       )
       created_tweet = Tweet.create(
