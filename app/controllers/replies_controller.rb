@@ -19,7 +19,7 @@ class RepliesController < ApplicationController
   end
 
   def create
-    tweet = Tweet.create(content: params[:content])
+    tweet = Tweet.create(content: params[:content],user_id: params[:user_id],tweet_id: params[:tweet_id])
     render json: tweet, status: :created
   end
 

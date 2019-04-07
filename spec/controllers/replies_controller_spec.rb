@@ -73,7 +73,11 @@ describe RepliesController do
         name: "Carlos", 
         description: 'Software developer!'
       )
-      post :create, params: { content: "Primer Tweet",user_id: created_user.id }
+      tweets = Tweet.create(
+        content: "Estoy testeando update!", 
+        user_id: created_user.id
+      )
+      post :create, params: { content: "Primer Tweet",user_id: created_user.id,tweet_id: tweets.id }
       expect(response.status).to eq(201)
       expect(response).to have_http_status(:created)
     end
@@ -83,7 +87,11 @@ describe RepliesController do
         name: "Carlos", 
         description: 'Software developer!'
       )
-      post :create, params: { content: "Primer Tweet", user_id: created_user.id }
+      tweets = Tweet.create(
+        content: "Estoy testeando update!", 
+        user_id: created_user.id
+      )
+      post :create, params: { content: "Primer Tweet", user_id: created_user.id,tweet_id: tweets.id }
       expected_product = JSON.parse(response.body)
       expect(expected_product).to have_key("id")
       expect(expected_product["content"]).to eq("Primer Tweet")
