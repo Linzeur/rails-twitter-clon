@@ -24,6 +24,11 @@ class TweetsController < ApplicationController
     render json: tweet
   end
   
+  def destroy
+    tweet = Tweet.find(params[:id])
+    tweet.destroy
+    render nothing: true, status: :no_content
+  end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found
