@@ -14,10 +14,12 @@ describe UsersController do
     it 'render json with all users' do
       User.create(
         name: 'Angie',
+        username: 'AngieC',
         description: 'Aprendiendo a codear'
       )
       User.create(
         name: 'Carlos',
+        username: 'CarlitosS',
         description: 'Firebase Rules!!'
       )
       get :index
@@ -30,6 +32,7 @@ describe UsersController do
     it 'returns http status ok' do
       user = User.create(
               name: "Deyvi",
+              username: 'deyconde',
               description: 'Mi pelucaaaaa'
             )
       get :show, params: { id: user.id }
@@ -37,7 +40,9 @@ describe UsersController do
     end
 
     it 'render the correct user' do
-      user = User.create(name: "Deyvi",
+      user = User.create(
+              name: "Deyvi",
+              username: 'deyconde',
               description: 'Mi segunda prueba'
             )
       get :show, params: { id: user.id }
@@ -51,62 +56,96 @@ describe UsersController do
     end
   end
 
-  # describe "POST create" do
-  #   it "returns http status created" do
-  #     post :create, params: { model: "OPS768" }
-  #     expect(response.status).to eq(201)
-  #     expect(response).to have_http_status(:created)
-  #   end
+  describe "POST create" do
+    it "returns http status created" do
+      post :create, params: { name: "Usuario 1", username: "userTest", country: "Peru" }
+      expect(response.status).to eq(201)
+      expect(response).to have_http_status(:created)
+    end
 
-  #   it "returns the created airplane" do
-  #     post :create, params: { model: "OPS768" }
-  #     expected_airplane = JSON.parse(response.body)
-  #     expect(expected_airplane).to have_key("id")
-  #     expect(expected_airplane["model"]).to eq("OPS768")
-  #   end
-  # end
+    it "returns the created user" do
+      post :create, params: { name: "Usuario 1", username: "userTest", country: "Peru" }
+      expected_user = JSON.parse(response.body)
+      expect(expected_user).to have_key("id")
+      expect(expected_user["name"]).to eq("Usuario 1")
+    end
+  end
 
-  # describe "PATCH update" do
-  #   it "returns http status ok" do
-  #     airplane = User.create(model: 'OPS768')
-  #     patch :update, params: { model: "UIO292", id: User.id, capacity: 100 }
-  #     expect(response).to have_http_status(:ok)
-  #   end
+  describe "PATCH update" do
+    it "returns http status ok" do
+      user = User.create(
+              name: "Usuario 1",
+              username: "userTest",
+              description: "Soy un nuevo usuario de prueba",
+              country: "Peru"
+            )
+      patch :update, params: { id: user.id, name: "Usuario 1 updated", username: "userTest1" }
+      expect(response).to have_http_status(:ok)
+    end
 
-  #   it "returns the updated airplane" do
-  #     airplane = User.create(model: 'OPS768')
-  #     patch :update, params: { model: "UIO292", id: User.id, capacity: 50 }
-  #     expected_airplane = JSON.parse(response.body)
-  #     expect(expected_airplane["model"]).to eq("UIO292")
-  #     expect(expected_airplane["capacity"]).to eq(50)
-  #   end
-  # end
+    it "returns the updated user" do
+      user = User.create(
+              name: "Usuario 1",
+              username: "userTest",
+              description: "Soy un nuevo usuario de prueba",
+              country: "Peru"
+            )
+      patch :update, params: { id: user.id, name: "Usuario 1 updated", username: "userTest1" }
+      expected_user = JSON.parse(response.body)
+      expect(expected_user["name"]).to eq("Usuario 1 updated")
+      expect(expected_user["username"]).to eq("userTest1")
+    end
+  end
 
-  # describe "DELETE destroy" do
-  #   it "returns http status no content" do
-  #     airplane = User.create(model: 'OPS768')
-  #     delete :destroy, params: { id: airplane }
-  #     expect(response).to have_http_status(:no_content)
-  #   end
+  describe "DELETE destroy" do
+    it "returns http status no content" do
+      user = User.create(
+              name: "Usuario 2",
+              username: "test456",
+              description: "Soy otro nuevo usuario de prueba para twitter",
+              country: "Bolivia",
+              url: "http://www.twitter.com/usu2.456"
+            )
+      delete :destroy, params: { id: user }
+      expect(response).to have_http_status(:no_content)
+    end
 
-  #   it "returns empty body" do
-  #     airplane = User.create(model: 'OPS768')
-  #     delete :destroy, params: { id: airplane }
-  #     expect(response.body).to eq(" ")
-  #   end
+    it "returns empty body" do
+      user = User.create(
+              name: "Usuario 2",
+              username: "test456",
+              description: "Soy otro nuevo usuario de prueba para twitter",
+              country: "Bolivia",
+              url: "http://www.twitter.com/usu2.456"
+            )
+      delete :destroy, params: { id: user }
+      expect(response.body).to eq(" ")
+    end
 
-  #   it "decrement by 1 the total of airplanes" do
-  #     airplane = User.create(model: 'OPS768')
-  #     expect do
-  #       delete :destroy, params: { id: airplane }
-  #     end.to change { User.count }.by(-1)
-  #   end
+    it "decrement by 1 the total of users" do
+      user = User.create(
+              name: "Usuario 2",
+              username: "test456",
+              description: "Soy otro nuevo usuario de prueba para twitter",
+              country: "Bolivia",
+              url: "http://www.twitter.com/usu2.456"
+            )
+      expect do
+        delete :destroy, params: { id: user }
+      end.to change { User.count }.by(-1)
+    end
 
-  #   it "actually delete the product" do
-  #     airplane = User.create(model: 'OPS768')
-  #     delete :destroy, params: { id: airplane }
-  #     airplanes = User.where(id: User.id)
-  #     expect(airplanes.size).to eq(0)
-  #   end
-  # end
+    it "actually delete the user" do
+      user = User.create(
+              name: "Usuario 2",
+              username: "test456",
+              description: "Soy otro nuevo usuario de prueba para twitter",
+              country: "Bolivia",
+              url: "http://www.twitter.com/usu2.456"
+            )
+      delete :destroy, params: { id: user }
+      users = User.where(id: user.id)
+      expect(users.size).to eq(0)
+    end
+  end
 end

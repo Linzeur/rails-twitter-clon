@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    user = User.create(name: params[:name])
+    user = User.create(name: params[:name], username: params[:username], country: params[:country])
     render json: user, status: :created
   end
 
@@ -39,8 +39,8 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    product = Product.find(params[:id])
-    product.destroy
+    user = User.find(params[:id])
+    user.destroy
     render nothing: true, status: :no_content
 end
 
