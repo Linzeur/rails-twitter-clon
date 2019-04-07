@@ -10,7 +10,7 @@ class RepliesController < ApplicationController
   def update
     tweet = Tweet.find(params[:id])
     params.keys.each do |key|
-      if key != :id && tweet.attributes.key?(key)
+      if key != :id && tweet.attributes.key?(key) && key != :user_id
         tweet[key] = params[key]
       end
     end
