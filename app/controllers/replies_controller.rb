@@ -1,12 +1,5 @@
 class RepliesController < ApplicationController
-  def index
-    Tweet.where.not("tweet_id"=> nil)
-    render nothing: true, status: :ok
-  end
-
-  def show
-    render json: Tweet.find(params[:id])
-  end
+ 
 
   def update
     tweet = Tweet.find(params[:id])
@@ -19,11 +12,11 @@ class RepliesController < ApplicationController
     render json: tweet
   end
 
-  # def destroy
-  #   product = Product.find(params[:id])
-  #   product.destroy
-  #   render nothing: true, status: :no_content
-  # end
+  def destroy
+    tweet = Tweet.find(params[:id])
+    tweet.destroy
+    render nothing: true, status: :no_content
+  end
   
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found
