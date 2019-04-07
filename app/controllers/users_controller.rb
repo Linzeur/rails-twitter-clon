@@ -7,8 +7,7 @@ class UsersController < ApplicationController
               row.counts = Hash.new
               row.counts = new_hash
               row
-            end
-    puts users.to_s
+            end    
     render json: users, methods: [:counts]
   end
 
@@ -18,7 +17,6 @@ class UsersController < ApplicationController
     new_hash[:followers] = user_founded.followers.size
     new_hash[:follows] = user_founded.follows.size
     user_founded.counts = new_hash
-    puts user_founded.methods.sort.to_s
     render json: user_founded, methods: [:counts]
   end
 
@@ -28,21 +26,25 @@ class UsersController < ApplicationController
   end
 
   def update
-    user = User.find(params[:id])
+    user_founded = User.find(params[:id])
     params.keys.each do |key|
-      if key != :id && user.attributes.key?(key)
-        user[key] = params[key]
+      if key != :id && user_founded.attributes.key?(key)
+        user_founded[key] = params[key]
       end
     end
-    user.save
-    render json: user
+    user_founded.save
+    new_hash = Hash.new
+    new_hash[:followers] = user_founded.followers.size
+    new_hash[:follows] = user_founded.follows.size
+    user_founded.counts = new_hash
+    render json: user_founded
   end
 
   def destroy
     user = User.find(params[:id])
     user.destroy
     render nothing: true, status: :no_content
-end
+  end
 
   rescue_from ActiveRecord::RecordNotFound do |e|
     render json: { message: e.message }, status: :not_found
